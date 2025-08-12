@@ -3,7 +3,7 @@ name: Infra Provisioning - AKS
 on:
   push:
     branches:
-      - featurechanges        # 1️⃣ Only run if you push to this branch
+      - featurechanges         # 1️⃣ Only run if you push to this branch
     paths:
       - 'terraform/**'         # 2️⃣ Only run if the files changed are inside terraform/ folder
   workflow_dispatch:           # 3️⃣ Allow manual run from GitHub Actions UI
