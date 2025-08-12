@@ -1,11 +1,3 @@
-terraform {
-  backend "azurerm" {
-    resource_group_name  = "kprg"
-    container_name       = "tfstate"
-    key                  = "terraform.tfstate"
-  }
-}
-
 mysql_server_name    = "rwdbserver"
 mysql_server_version = "8.0.21"
 mysql_sku_name       = "B_Standard_B1ms"  
