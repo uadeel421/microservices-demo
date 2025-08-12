@@ -16,7 +16,6 @@
 *.pyc
 *.swp
 *.tfstate*
-*.tfvars
 *~
 bin/
 build/
@@ -33,5 +32,4 @@ vendor/
 *.secrets
 secrets.yml
 secret.yml
-*.tfvars
 .terraform/
