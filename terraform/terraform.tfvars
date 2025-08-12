@@ -25,7 +25,7 @@ os_sku                 = "AzureLinux"
 # System Node Pool Autoscaling and Labels 
 
 min_count              = 2
-max_count              = 3
+max_count              = 4
 max_pods               = 50
 
 # User Node Pool Autoscaling and Labels 
@@ -35,7 +35,7 @@ user_node_pool_labels = {
   environment   = "staging"
 }
 user_node_pool_min_count = 2
-user_node_pool_max_count = 3
+user_node_pool_max_count = 4
 
 
 
