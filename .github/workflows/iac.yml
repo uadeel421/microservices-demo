@@ -3,11 +3,10 @@ name: Infra Provisioning - AKS
 on:
   push:
     branches:
-      - featurechanges         # 1️⃣ Only run if you push to this branch
+      - featurechanges           # Only run on featurechanges branch
     paths:
-      - 'terraform/**'         # 2️⃣ Only run if the files changed are inside terraform/ folder
-  workflow_dispatch:           # 3️⃣ Allow manual run from GitHub Actions UI
-
+      - 'terraform/**'           # Only run if files inside terraform/ change
+  workflow_dispatch:              # Allow manual trigger from Actions UI
 
 jobs:
   terraform:
@@ -18,14 +17,17 @@ jobs:
       id-token: write
 
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # 2️⃣ Azure Login
       - name: Login to Azure
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      # 3️⃣ Export ARM_* vars for Terraform
       - name: Set ARM_* environment variables (for Terraform)
         run: |
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.ARM_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
@@ -33,31 +35,29 @@ jobs:
           echo "ARM_CLIENT_ID=${{ secrets.ARM_CLIENT_ID }}" >> $GITHUB_ENV
           echo "ARM_CLIENT_SECRET=${{ secrets.ARM_CLIENT_SECRET }}" >> $GITHUB_ENV
 
+      # 4️⃣ Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: '1.8.5'
 
+      # 5️⃣ Init
       - name: Terraform Init
         working-directory: terraform
         run: terraform init -input=false
 
+      # 6️⃣ Validate
       - name: Terraform Validate
         working-directory: terraform
         run: terraform validate
 
+      # 7️⃣ Plan
       - name: Terraform Plan
         working-directory: terraform
         run: terraform plan -out=tfplan -input=false
 
-      - name: Upload tfplan (artifact)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-plan
-          path: terraform/tfplan
-
-      - name: Terraform Apply (only on featureschanges branch)
-        if: github.ref == 'refs/heads/featureschanges'
+      # 8️⃣ Apply (only on featurechanges branch)
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/featurechanges'
         working-directory: terraform
         run: terraform apply -auto-approve tfplan
