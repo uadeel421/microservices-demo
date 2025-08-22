@@ -81,9 +81,16 @@ jobs:
       - name: Build and Push Docker image
         working-directory: src/${{ matrix.service }}
         run: |
+          DOCKERFILE_PATH="Dockerfile"
+          # Check for cartservice and adjust Dockerfile path
+          if [ "${{ matrix.service }}" == "cartservice" ]; then
+            DOCKERFILE_PATH="src/Dockerfile"
+          fi
+  
           docker buildx create --use --driver docker-container --bootstrap || true
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
+            --file "${DOCKERFILE_PATH}" \
             --tag uadeel421/reliance-${{ matrix.service }}:latest \
             --tag uadeel421/reliance-${{ matrix.service }}:${{ env.SHA }} \
             --push .
