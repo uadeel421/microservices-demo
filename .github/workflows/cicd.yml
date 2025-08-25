@@ -127,11 +127,22 @@ jobs:
         run: |
           kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
   
-      - name: Install Azure Key Vault CSI Driver
+      - name: Install Secrets Store CSI Driver and Azure Provider
         run: |
-          helm repo add azure-secrets-store-csi-driver https://azure.github.io/secrets-store-csi-driver-provider-azure/charts
+          # Add the repository for the core Secrets Store CSI Driver
+          helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+  
+          # Add the repository for the Azure Key Vault Provider
+          helm repo add csi-secrets-store-provider-azure https://azure.github.io/secrets-store-csi-driver-provider-azure/charts
+          
+          # Update both repositories
           helm repo update
-          helm upgrade --install csi-secrets-store azure-secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system
+  
+          # Install the core Secrets Store CSI Driver
+          helm upgrade --install csi-secrets-store-driver secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system
+  
+          # Install the Azure Key Vault Provider
+          helm upgrade --install csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --namespace kube-system
   
       - name: Install NGINX Ingress Controller
         run: |
