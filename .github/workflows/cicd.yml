@@ -104,40 +104,42 @@ jobs:
     name: Deploy to AKS via Helm
     needs: build-and-push
     runs-on: ubuntu-latest
-
+  
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
+  
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+  
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
-
+  
       - name: Set up Helm
         uses: azure/setup-helm@v3
-
+  
       - name: Get AKS credentials
         run: az aks get-credentials --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }}
-
+  
       - name: Create 'staging' namespace if not exists
         run: |
           kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
+  
       - name: Install Azure Key Vault CSI Driver
         run: |
           helm repo add azure-secrets-store-csi-driver https://azure.github.io/secrets-store-csi-driver-provider-azure/charts
           helm repo update
           helm upgrade --install csi-secrets-store azure-secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system
-
+  
       - name: Install NGINX Ingress Controller
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
           helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
             --namespace ingress-nginx --create-namespace
+  
       - name: Deploy using Helm
         run: |
           helm upgrade --install relianceapp ./helm-charts/reliance-app \
