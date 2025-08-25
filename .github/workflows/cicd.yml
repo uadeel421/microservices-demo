@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - featurechanges
- # pull_request:
- #   branches: [featurechanges]
+  pull_request:
+    branches: [featurechanges]
     paths:
       - 'src/**'  
   workflow_dispatch:
