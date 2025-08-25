@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - featurechanges
-  pull_request:
-    branches: [featurechanges]
+ # pull_request:
+ #   branches: [featurechanges]
     paths:
       - 'src/**'  
   workflow_dispatch:
@@ -132,17 +132,13 @@ jobs:
           # Add the repository for the core Secrets Store CSI Driver
           helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
   
-          # Add the repository for the Azure Key Vault Provider
-          helm repo add csi-secrets-store-provider-azure https://azure.github.io/secrets-store-csi-driver-provider-azure/charts
-          
-          # Update both repositories
+          # Update the repository
           helm repo update
   
-          # Install the core Secrets Store CSI Driver
-          helm upgrade --install csi-secrets-store-driver secrets-store-csi-driver/secrets-store-csi-driver --namespace kube-system
-  
-          # Install the Azure Key Vault Provider
-          helm upgrade --install csi-secrets-store-provider-azure csi-secrets-store-provider-azure/csi-secrets-store-provider-azure --namespace kube-system
+          # Install both the core driver and the Azure provider with a single command
+          helm upgrade --install csi-secrets-store-driver secrets-store-csi-driver/secrets-store-csi-driver \
+            --namespace kube-system \
+            --set "providers.azure.enabled=true"
   
       - name: Install NGINX Ingress Controller
         run: |
