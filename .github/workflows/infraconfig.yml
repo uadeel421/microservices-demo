@@ -52,7 +52,12 @@ jobs:
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
           # Clean up any existing NGINX Ingress installations to prevent conflicts
-          helm uninstall ingress-nginx --namespace ingress-nginx --ignore-not-found
+          if helm list -n ingress-nginx | grep ingress-nginx; then
+            echo "Found existing NGINX Ingress. Uninstalling..."
+            helm uninstall ingress-nginx --namespace ingress-nginx
+          else
+            echo "No existing NGINX Ingress found. Skipping uninstall."
+          fi
           # Deploy the NGINX Ingress Controller
           helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
             --namespace ingress-nginx --create-namespace
