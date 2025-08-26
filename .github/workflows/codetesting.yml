@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - featurechanges
+    paths:
+      - 'src/**'
   pull_request:
     branches: [featurechanges]
     paths:
-      - 'src/**'  
+      - 'src/**'
   workflow_dispatch:
 
 concurrency:
