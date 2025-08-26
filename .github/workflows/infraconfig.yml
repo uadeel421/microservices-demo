@@ -34,9 +34,8 @@ jobs:
           # Add the repository for the core Secrets Store CSI Driver
           helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
           helm repo update
-          helm upgrade --install csi-secrets-store-driver secrets-store-csi-driver/secrets-store-csi-driver \
-            --namespace kube-system \
-            --set "providers.azure.enabled=true"
+          helm upgrade --install csi-secrets-store-provider-azure secrets-store-csi-driver/csi-secrets-store-provider-azure --namespace kube-system --wait
+            
   
       - name: Install NGINX Ingress Controller
         run: |
