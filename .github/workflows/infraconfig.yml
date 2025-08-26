@@ -31,13 +31,23 @@ jobs:
           kubectl create namespace staging --dry-run=client -o yaml | kubectl apply -f -
       - name: Install Secrets Store CSI Driver and Azure Provider
         run: |
+          # Add the repository for the core Secrets Store CSI Driver
+          helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
+          helm repo update
+          # Clean up any existing CSI driver installations to prevent conflicts
+          helm uninstall csi-secrets-store-driver --namespace kube-system --ignore-not-found
+          # Deploy the core CSI driver and enable the Azure provider in one command
           helm upgrade --install csi-secrets-store-driver secrets-store-csi-driver/secrets-store-csi-driver \
             --namespace kube-system \
             --set "providers.azure.enabled=true"
   
       - name: Install NGINX Ingress Controller
         run: |
+          # Add the repository for NGINX Ingress Controller
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
+          # Clean up any existing NGINX Ingress installations to prevent conflicts
+          helm uninstall ingress-nginx --namespace ingress-nginx --ignore-not-found
+          # Deploy the NGINX Ingress Controller
           helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
             --namespace ingress-nginx --create-namespace
