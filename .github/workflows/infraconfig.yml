@@ -35,7 +35,12 @@ jobs:
           helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
           helm repo update
           # Clean up any existing CSI driver installations to prevent conflicts
-          helm uninstall csi-secrets-store-driver --namespace kube-system --ignore-not-found
+          if helm list -n kube-system | grep csi-secrets-store-driver; then
+            echo "Found existing CSI driver. Uninstalling..."
+            helm uninstall csi-secrets-store-driver --namespace kube-system
+          else
+            echo "No existing CSI driver found. Skipping uninstall."
+          fi
           # Deploy the core CSI driver and enable the Azure provider in one command
           helm upgrade --install csi-secrets-store-driver secrets-store-csi-driver/secrets-store-csi-driver \
             --namespace kube-system \
