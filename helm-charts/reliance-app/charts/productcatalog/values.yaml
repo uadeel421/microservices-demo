@@ -31,4 +31,4 @@ resources:
 secretProvider:
   keyvaultName: "kpskeyvault"
   tenantId: "1c127d2d-2d00-477a-b479-3104cb849681"
-  userAssignedIdentityID: "0f25cea3-7f60-40b8-98d7-a87116e002dc"    
+  userAssignedIdentityID: "82804003-1dbd-4492-bc39-28da29f471a8"    
