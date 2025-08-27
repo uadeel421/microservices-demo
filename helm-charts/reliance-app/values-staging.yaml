@@ -2,7 +2,7 @@
 
 # Global values that are shared across all subcharts
 ingress:
-  host: "reliancecloud.online"
+  host: "staging.reliancecloud.online"
 
 global:
   environment: staging
