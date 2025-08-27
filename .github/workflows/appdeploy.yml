@@ -25,6 +25,10 @@ jobs:
       - name: Get AKS credentials
         run: az aks get-credentials --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} --name ${{ secrets.AKS_CLUSTER_NAME }}
 
+        # Add the sleep command here to wait for SecretProviderClass to be ready
+      - name: Wait for Secrets Provider
+        run: sleep 10 
+        
       - name: Deploy using Helm
         run: |
           helm upgrade --install relianceapp ./helm-charts/reliance-app \
