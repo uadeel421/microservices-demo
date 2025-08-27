@@ -11,8 +11,8 @@ global:
   secretProvider:
     keyvaultName: "kpskeyvault"
     tenantId: "1c127d2d-2d00-477a-b479-3104cb849681"
-    #userAssignedIdentityID: "c5de1a96-3396-4a13-aee6-68aeea1317f4"
-    clientID: "c5de1a96-3396-4a13-aee6-68aeea1317f4"
+    userAssignedIdentityID: "c5de1a96-3396-4a13-aee6-68aeea1317f4"
+
   
   sslVolume:
     secretName: ssl-certificates
